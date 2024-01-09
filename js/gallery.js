@@ -64,38 +64,48 @@ const images = [
   },
 ];
 
-const listEl = document.querySelector('.gallery');
-
-const items = images.map((image) => {
-    const itemLi = document.createElement('li');
-    itemLi.classList.add('gallery-item');
-    const itemLink = document.createElement('a');
-    itemLink.classList.add('gallery-link');
-    itemLink.href = image.original;
-    itemLi.appendChild(itemLink);
-    const itemImage = document.createElement('img');
-    itemImage.classList.add('gallery-image');
-    itemImage.src = image.preview;
-    itemImage.dataset.source = image.original;
-    itemImage.alt = image.description;
-    itemLink.appendChild(itemImage);
-    return itemLi;
-});
-
-listEl.append(...items);
-
-listEl.addEventListener('click', clickImage);
+const imagesContainer = document.querySelector('.gallery');
+const imageMarkup = createImageCard(images);
 
 
-function clickImage(event) {
+imagesContainer.insertAdjacentHTML('beforeend', imageMarkup);
+
+imagesContainer.addEventListener('click', onContainerClick);
+imagesContainer.addEventListener('click', openModale);
+
+function createImageCard(images) {
+    return images.map(({preview, original, description}) => {
+        return `
+    <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+            <img
+            class="gallery-image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+            />
+        </a>
+    </li>
+    `;
+    }).join('');
+}
+
+function onContainerClick(event) {
     event.preventDefault();
-    const dataEl = document.querySelectorAll('.gallery-image');
 
     if (event.target.tagName !== 'IMG') {
         return;
-    } else {
-        const selectedImg = event.targer.dataset.source;
-        console.log(selectedImg);
-    }
+    } 
 
+    console.log(event.target.dataset.source);
 }
+
+function openModale(event) {
+   
+        const originalImg = event.target.dataset.source;
+        const instance = basicLightbox.create(`<img width="1400" height="900" src="${originalImg}">`);
+        instance.show();
+        console.log(instance.show());
+    
+}
+
