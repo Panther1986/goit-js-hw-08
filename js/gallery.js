@@ -69,8 +69,6 @@ const imageMarkup = createImageCard(images);
 
 
 imagesContainer.insertAdjacentHTML('beforeend', imageMarkup);
-
-imagesContainer.addEventListener('click', onContainerClick);
 imagesContainer.addEventListener('click', openModale);
 
 function createImageCard(images) {
@@ -90,22 +88,21 @@ function createImageCard(images) {
     }).join('');
 }
 
-function onContainerClick(event) {
-    event.preventDefault();
-
-    if (event.target.tagName !== 'IMG') {
-        return;
-    } 
-
-    console.log(event.target.dataset.source);
-}
 
 function openModale(event) {
-   
-        const originalImg = event.target.dataset.source;
-        const instance = basicLightbox.create(`<img width="1400" height="900" src="${originalImg}">`);
-        instance.show();
-        console.log(instance.show());
+  event.preventDefault();
+  const originalImg = event.target.dataset.source;
+
+  if (event.target.classList.contains('gallery-image')) {
+    const instance = basicLightbox.create(`<img width="1400" height="900" src="${originalImg}">`);
+  instance.show();
+    console.log(instance.show());
     
+  imagesContainer.addEventListener('keydown', function keyDown(event) {
+  if (event.key === 'Escape') {
+    instance.close();
+  };
+});
+  }
 }
 
