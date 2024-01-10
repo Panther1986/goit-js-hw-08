@@ -65,13 +65,8 @@ const images = [
 ];
 
 const imagesContainer = document.querySelector('.gallery');
-const imageMarkup = createImageCard(images);
 
-
-imagesContainer.insertAdjacentHTML('beforeend', imageMarkup);
-imagesContainer.addEventListener('click', openModale);
-
-function createImageCard(images) {
+function cardImageMarkup(images) {
     return images.map(({preview, original, description}) => {
         return `
     <li class="gallery-item">
@@ -87,22 +82,32 @@ function createImageCard(images) {
     `;
     }).join('');
 }
+const imageMarkup = cardImageMarkup(images);
+imagesContainer.insertAdjacentHTML('beforeend', imageMarkup);
 
-
-function openModale(event) {
+let instance;
+imagesContainer.addEventListener('click', (event) => {
   event.preventDefault();
-  const originalImg = event.target.dataset.source;
-
+  
   if (event.target.classList.contains('gallery-image')) {
-    const instance = basicLightbox.create(`<img width="1400" height="900" src="${originalImg}">`);
-  instance.show();
-    console.log(instance.show());
-    
-  imagesContainer.addEventListener('keydown', function keyDown(event) {
-  if (event.key === 'Escape') {
-    instance.close();
-  };
+    const originalImg = event.target.dataset.source;
+
+    instance = basicLightbox.create(`<img width="1400" height="900" src="${originalImg}">`);
+    instance.show();
+  
+    document.addEventListener('keydown', keyDown);
+  }
 });
+
+function keyDown(event) {
+  if (event.key === 'Escape' || event.code === 'Escape' || event.key === 'Esc' || event.code === 'Esc') {
+    closeModal();
   }
 }
 
+function closeModal() {
+  if (instance && instance.visible()) {
+    instance.close();
+    document.removeEventListener('keydown', keyDown);
+  }
+}
