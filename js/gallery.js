@@ -105,9 +105,9 @@ function keyDown(event) {
   }
 }
 
-function closeModal() {
-  if (instance && instance.visible()) {
-    instance.close();
-    document.removeEventListener('keydown', keyDown);
-  }
-}
+// function closeModal() {
+//   if (instance && instance.visible()) {
+//     instance.close();
+//     document.removeEventListener('keydown', keyDown);
+//   }
+// }
